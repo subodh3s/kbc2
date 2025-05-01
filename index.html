@@ -140,9 +140,10 @@ h1 {
   },
 ];
 
-const prizeLevels = [1000, 5000, 10000, 50000, 100000, 250000, 500000, 1000000, 2500000, 5000000, 10000000];
+let currentLevel = 0;
 let currentQuestion = 0;
 let currentPrize = 0;
+const prizePerLevel = [5000, 20000, 100000]; // You can expand this
 let lifelineUsed = false;
 
 const questionEl = document.getElementById("question");
@@ -150,12 +151,6 @@ const prizeEl = document.getElementById("prize");
 const resultEl = document.getElementById("result");
 const optionBtns = document.querySelectorAll(".option-btn");
 const lifelineBtn = document.getElementById("lifeline-btn");
-
-let currentLevel = 0;
-let currentQuestion = 0;
-let currentPrize = 0;
-const prizePerLevel = [5000, 20000, 100000]; // You can expand this
-let lifelineUsed = false;
 
 function loadQuestion() {
   const levelData = levels[currentLevel];
