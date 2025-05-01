@@ -166,25 +166,37 @@ function loadQuestion() {
 }
 
 function selectAnswer(index) {
-  const correct = questions[currentQuestion].answer;
+  const qData = levels[currentLevel].questions[currentQuestion];
+  const correct = qData.answer;
+
   if (index === correct) {
-    currentPrize = prizeLevels[currentQuestion];
-    resultEl.textContent = `✅ Correct! You won ₹${currentPrize}`;
+    resultEl.textContent = `✅ Correct!`;
     currentQuestion++;
-    if (currentQuestion < questions.length) {
+
+    if (currentQuestion < levels[currentLevel].questions.length) {
       setTimeout(loadQuestion, 1500);
     } else {
-      resultEl.textContent = `🏆 Congratulations! You are a Crorepati! Total: ₹${currentPrize}`;
-      disableAllOptions();
+      // Completed this level
+      currentPrize = prizePerLevel[currentLevel];
+      resultEl.textContent = `🎉 Level ${levels[currentLevel].level} cleared! Prize: ₹${currentPrize}`;
+      currentLevel++;
+      currentQuestion = 0;
+      lifelineUsed = false;
+      lifelineBtn.disabled = false;
+
+      if (currentLevel < levels.length) {
+        setTimeout(loadQuestion, 2000);
+      } else {
+        resultEl.textContent = `🏆 Congratulations! You completed all levels! Total Winnings: ₹${currentPrize}`;
+        disableAllOptions();
+        lifelineBtn.disabled = true;
+      }
     }
   } else {
-    resultEl.textContent = `❌ Wrong! Correct answer was: ${questions[currentQuestion].options[correct]}`;
+    resultEl.textContent = `❌ Wrong! Correct answer was: ${qData.options[correct]}`;
     disableAllOptions();
+    lifelineBtn.disabled = true;
   }
-}
-
-function disableAllOptions() {
-  optionBtns.forEach((btn) => (btn.disabled = true));
 }
 
 function useLifeline() {
@@ -192,7 +204,7 @@ function useLifeline() {
   lifelineUsed = true;
   lifelineBtn.disabled = true;
 
-  const correct = questions[currentQuestion].answer;
+ const correct = levels[currentLevel].questions[currentQuestion].answer;
   const hideCount = 2;
   let hidden = 0;
   while (hidden < hideCount) {
